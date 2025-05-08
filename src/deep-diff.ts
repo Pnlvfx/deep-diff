@@ -43,13 +43,12 @@ type ComparisonResult<T> = T extends Primitive
       ? { [K in keyof T]: ComparisonResult<T[K]> }
       : never;
 
-type UnknownObject = Record<string, unknown>;
-
-export const createComparison = <T extends UnknownObject | Primitive>(obj1: T, obj2: T) => {
+export const createComparison = <T extends Record<string, unknown>>(obj1: T, obj2: T) => {
   if (isFunction(obj1) || isFunction(obj2)) throw new TypeError('Invalid argument. Function given, object expected.');
   if (isValue(obj1) || isValue(obj2)) {
     return {
       type: compareValues(obj1, obj2),
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       data: obj1 ?? obj2,
     } as ComparisonResult<T>;
   }
@@ -70,7 +69,7 @@ export const createComparison = <T extends UnknownObject | Primitive>(obj1: T, o
   }
 
   for (const [key, value] of Object.entries(obj2)) {
-    /** @ts-expect-error Some mismatch here, i think it could be improved. */
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (isFunction(value) || diff[key] !== undefined) continue;
     /** @ts-expect-error Some mismatch here, i think it could be improved. */
     diff[key] = createComparison(undefined, value);
