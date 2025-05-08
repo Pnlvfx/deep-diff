@@ -43,7 +43,7 @@ type ComparisonResult<T> = T extends Primitive
       ? { [K in keyof T]: ComparisonResult<T[K]> }
       : never;
 
-type UnknownObject = Record<string, Primitive>;
+type UnknownObject = Record<string, unknown>;
 
 export const createComparison = <T extends UnknownObject | Primitive>(obj1: T, obj2: T) => {
   if (isFunction(obj1) || isFunction(obj2)) throw new TypeError('Invalid argument. Function given, object expected.');
